@@ -80,16 +80,26 @@ public class WallMerge : MonoBehaviour
 
             if (IsAdsorbable(hitObj))
             {
+                GameObject[] edgeSearchs = GameObject.FindGameObjectsWithTag("EdgeSearch");
+                GameObject edgeSearch;
+                if(edgeSearchs.Length == 0)
+                {
+                    edgeSearch = new GameObject("EdgeSearch");
+                    edgeSearch.AddComponent<RaySearch>();                   
+                    edgeSearch.tag = "EdgeSearch";
+                }
+                else
+                {
+                    edgeSearch = edgeSearchs[0];
 
-
-                GameObject edgeSearch = new GameObject("EdgeSearch");
-               // GameObject edgeSearch = GameObject.Find("EdgeSearch");
-
+                    for (int i = 1; i < edgeSearchs.Length; i++)
+                    {
+                        Destroy(edgeSearchs[i]);
+                    }
+                }
                 edgeSearch.transform.position = transform.position + (Vector3.up * 1f);
                 edgeSearch.transform.rotation = transform.rotation;
-                edgeSearch.AddComponent<RaySearch>();
                 RaySearch search = edgeSearch.GetComponent<RaySearch>();
-                edgeSearch.tag ="EdgeSearch";
                 
                 search.stepSize = 0.6f;
                 search.DoPoints();
@@ -97,7 +107,9 @@ public class WallMerge : MonoBehaviour
                 List<Vector3> cornerPoints = new List<Vector3>();
 
                 for (int i = 0; i < search.cornerPoints.Count; i++)
-                    cornerPoints.Add(search.cornerPoints[i].position);
+                { 
+                    cornerPoints.Add(search.cornerPoints[i].position); 
+                }
 
                 //find the closest corner position and index
                 closestCorner = GetClosestPoint(cornerPoints.ToArray(), hit.point);
@@ -141,114 +153,6 @@ public class WallMerge : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Character2DrawLogic();
-            //if (Physics.Raycast(transform.position + (Vector3.up * .1f), transform.forward, out RaycastHit hit, 1))
-            //{
-            //    GameObject hitObj = hit.transform.gameObject;
-
-            //    if (IsAdsorbable(hitObj))
-            //    {
-
-            //        GameObject edgeSearch = GameObject.Find("EdgeSearch");
-                   
-            //        edgeSearch.transform.position = transform.position + (Vector3.up * 1f);
-            //        edgeSearch.transform.rotation = transform.rotation;
-            //        //edgeSearch.AddComponent<RaySearch>();
-            //        RaySearch search = edgeSearch.GetComponent<RaySearch>();
-            //        search.stepSize = 0.6f;
-            //        search.DoPoints();
-
-            //        List<Vector3> cornerPoints = new List<Vector3>();
-
-            //        for (int i = 0; i < search.cornerPoints.Count; i++)
-            //            cornerPoints.Add(search.cornerPoints[i].position);
-
-            //        //find the closest corner position and index
-            //        closestCorner = GetClosestPoint(cornerPoints.ToArray(), hit.point);
-            //        int index = search.cornerPoints.FindIndex(x => x.position == closestCorner);
-
-            //        //determine the adjacent corners
-            //        //nextCorner = (index < search.cornerPoints.Count - 1) ? search.cornerPoints[index + 1].position : search.cornerPoints[0].position;
-            //        //previousCorner = (index > 0) ? search.cornerPoints[index - 1].position : search.cornerPoints[search.cornerPoints.Count - 1].position;
-            //        nextCorner = search.cornerPoints[(index + 1) % search.cornerPoints.Count].position;//LZX 2023/11/21
-            //        previousCorner = search.cornerPoints[(index - 1 + search.cornerPoints.Count) % search.cornerPoints.Count].position;//LZX 2023/11/21
-            //        //choose a corner to be the target
-
-            //        chosenCorner = Vector3.Dot((closestCorner - hit.point), (nextCorner - hit.point)) > Vector3.Dot((closestCorner - hit.point), (previousCorner - hit.point)) ? previousCorner : nextCorner;//LZX 2023/11/21
-            //        Debug.Log(Vector3.Dot((closestCorner - hit.point), (nextCorner - hit.point)));
-            //        bool nextCornerIsRight = isRightSide(-hit.normal, chosenCorner - closestCorner, Vector3.up);
-
-            //        //find the distance from the origin point
-            //        float distance = Vector3.Distance(closestCorner, chosenCorner);
-            //        float playerDis = Vector3.Distance(chosenCorner, hit.point);
-
-            //        //quick fix so that we don't allow the player to start in a corner;
-            //        if (playerDis > (distance - decalMovement.distanceToTurn))
-            //            playerDis = distance - decalMovement.distanceToTurn;
-            //        if (playerDis < decalMovement.distanceToTurn)
-            //            playerDis = decalMovement.distanceToTurn;
-
-            //        //find it's normalized position in the distance of the origin and target
-            //        float positionLerp = Mathf.Abs(distance - playerDis) / ((distance + playerDis) / 2);
-
-            //        //start the MovementScript
-            //        decalMovement.SetPosition(closestCorner, chosenCorner, positionLerp, search, nextCornerIsRight, hit.normal);
-
-            //        //transition logic
-            //        Transition(true, Vector3.Lerp(closestCorner, chosenCorner, positionLerp), hit.normal);
-            //    }
-
-            //   /* if (hit.transform.GetComponentInChildren<RaySearch>() != null)
-            //    {
-
-                   
-
-
-
-
-            //        //store raycasted object's RaySearch component
-            //        RaySearch search = hit.transform.GetComponentInChildren<RaySearch>();
-
-            //        //create a new list of all the corner positions
-            //        List<Vector3> cornerPoints = new List<Vector3>();
-
-            //        for (int i = 0; i < search.cornerPoints.Count; i++)
-            //            cornerPoints.Add(search.cornerPoints[i].position);
-
-            //        //find the closest corner position and index
-            //        closestCorner = GetClosestPoint(cornerPoints.ToArray(), hit.point);
-            //        int index = search.cornerPoints.FindIndex(x => x.position == closestCorner);
-
-            //        //determine the adjacent corners
-            //        //nextCorner = (index < search.cornerPoints.Count - 1) ? search.cornerPoints[index + 1].position : search.cornerPoints[0].position;
-            //        //previousCorner = (index > 0) ? search.cornerPoints[index - 1].position : search.cornerPoints[search.cornerPoints.Count - 1].position;
-            //        nextCorner = search.cornerPoints[(index+1)%search.cornerPoints.Count].position;//LZX 2023/11/21
-            //        previousCorner = search.cornerPoints[(index-1+search.cornerPoints.Count)%search.cornerPoints.Count].position;//LZX 2023/11/21
-            //        //choose a corner to be the target
-
-            //        chosenCorner = Vector3.Dot((closestCorner - hit.point), (nextCorner - hit.point)) > Vector3.Dot((closestCorner - hit.point), (previousCorner - hit.point)) ? previousCorner : nextCorner;//LZX 2023/11/21
-            //        Debug.Log(Vector3.Dot((closestCorner - hit.point), (nextCorner - hit.point)));
-            //        bool nextCornerIsRight = isRightSide(-hit.normal, chosenCorner - closestCorner, Vector3.up);
-
-            //        //find the distance from the origin point
-            //        float distance = Vector3.Distance(closestCorner, chosenCorner);
-            //        float playerDis = Vector3.Distance(chosenCorner, hit.point);
-
-            //        //quick fix so that we don't allow the player to start in a corner;
-            //        if (playerDis > (distance - decalMovement.distanceToTurn))
-            //            playerDis = distance - decalMovement.distanceToTurn;
-            //        if(playerDis < decalMovement.distanceToTurn)
-            //            playerDis = decalMovement.distanceToTurn;
-
-            //        //find it's normalized position in the distance of the origin and target
-            //        float positionLerp = Mathf.Abs(distance - playerDis) / ((distance + playerDis) / 2);
-
-            //        //start the MovementScript
-            //        decalMovement.SetPosition(closestCorner, chosenCorner, positionLerp, search, nextCornerIsRight, hit.normal);
-                                      
-            //        //transition logic
-            //        Transition(true, Vector3.Lerp(closestCorner, chosenCorner, positionLerp), hit.normal);
-            //    }*/
-            //}
         }
     }
 

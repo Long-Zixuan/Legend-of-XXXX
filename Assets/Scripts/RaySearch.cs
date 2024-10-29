@@ -14,7 +14,7 @@ public class RaySearch : MonoBehaviour
     //public int checkCountMax = 100;
     private bool cornerCheck = false;
     public List<MeshPoint> meshPoints = new List<MeshPoint>();
-    public List<MeshPoint> cornerPoints = new List<MeshPoint>();
+    public List<MeshPoint> cornerPoints = new List<MeshPoint>();// 这没初始化导致AddComponent出来的该类此数组报空
    // public List<Vector3> pathPoints = new List<Vector3>();
 
     List<Vector3[]> debugTangentCheck = new List<Vector3[]>();
