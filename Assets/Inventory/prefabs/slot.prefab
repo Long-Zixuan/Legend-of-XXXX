@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 660568016502343163}
   m_Layer: 5
   m_Name: 'Text '
-  m_TagString: Slots
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
