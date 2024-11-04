@@ -41,7 +41,8 @@ public class ItemOnDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
         else//碰到是slot了
         {
-            if (eventData.pointerCurrentRaycast.gameObject.transform.GetChild(0).gameObject.activeSelf)//有物品
+            //if (eventData.pointerCurrentRaycast.gameObject.transform.GetChild(0).gameObject.activeSelf)//有物品
+            if (eventData.pointerCurrentRaycast.gameObject.transform.childCount == 0)//没移动
             {
                 transform.SetParent(oriParent);
                 transform.position = oriParent.position;
